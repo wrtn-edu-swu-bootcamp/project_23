@@ -54,9 +54,9 @@ export default function FolioTab() {
         rightAction={
           <button
             onClick={toggleGrid}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-1 border-2 border-black newton-button"
           >
-            {gridCols === 2 ? <Grid3x3 size={20} /> : <LayoutGrid size={20} />}
+            {gridCols === 2 ? <Grid3x3 size={18} /> : <LayoutGrid size={18} />}
           </button>
         }
       />
@@ -75,8 +75,8 @@ export default function FolioTab() {
             .map((date) => (
               <div key={date} className="mb-8">
                 {/* Sticky Date Header */}
-                <div className="sticky top-[73px] z-30 bg-black/90 backdrop-blur-sm py-2 mb-3">
-                  <h2 className="text-sm font-semibold text-gray-400 px-2">
+                <div className="sticky top-[60px] z-30 bg-[#d4d4c8] border-b-2 border-black py-2 mb-2">
+                  <h2 className="text-xs font-bold px-2">
                     {new Date(date + '-01').toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -85,25 +85,20 @@ export default function FolioTab() {
                 </div>
 
                 {/* Grid */}
-                <div className={`grid ${gridCols === 2 ? 'grid-cols-2' : 'grid-cols-3'} gap-1`}>
+                <div className={`grid ${gridCols === 2 ? 'grid-cols-2' : 'grid-cols-3'} gap-2`}>
                   {groupedByDate[date].map((item) => (
                     <div
                       key={item.id}
                       onClick={() => setSelectedItem(item)}
-                      className="aspect-square bg-gray-900 rounded-sm overflow-hidden relative group cursor-pointer"
+                      className="aspect-square bg-white border-2 border-black overflow-hidden cursor-pointer newton-button"
                     >
                       <Image
                         src={item.url}
                         alt={item.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="object-cover"
                         sizes="(max-width: 390px) 33vw, 130px"
                       />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-2">
-                        <span className="text-xs text-white text-center line-clamp-2">
-                          {item.title}
-                        </span>
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -119,24 +114,24 @@ export default function FolioTab() {
         title={selectedItem?.title}
       >
         {selectedItem && (
-          <div className="space-y-4">
-            <div className="relative w-full aspect-square">
+          <div className="space-y-3">
+            <div className="relative w-full aspect-square border-2 border-black">
               <Image
                 src={selectedItem.url}
                 alt={selectedItem.title}
                 fill
                 className="object-contain"
-                sizes="90vw"
+                sizes="85vw"
               />
             </div>
             {selectedItem.caption && (
-              <p className="text-gray-400 text-sm">{selectedItem.caption}</p>
+              <p className="text-black text-sm font-mono">{selectedItem.caption}</p>
             )}
             <div className="flex gap-2">
               <Button variant="secondary" onClick={() => setSelectedItem(null)}>
-                닫기
+                Close
               </Button>
-              <Button variant="primary">편집</Button>
+              <Button variant="primary">Edit</Button>
             </div>
           </div>
         )}

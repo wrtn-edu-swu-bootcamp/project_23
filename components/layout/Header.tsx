@@ -5,7 +5,6 @@ interface HeaderProps {
   rightAction?: React.ReactNode
   leftAction?: React.ReactNode
   children?: React.ReactNode
-  transparent?: boolean
 }
 
 export default function Header({ 
@@ -13,19 +12,18 @@ export default function Header({
   rightAction, 
   leftAction,
   children,
-  transparent = false
 }: HeaderProps) {
   return (
-    <header className={`sticky top-0 z-40 ${transparent ? 'bg-black/80' : 'bg-black/95'} backdrop-blur-sm border-b border-gray-800 px-4 py-4`}>
-      <div className="flex items-center justify-between">
+    <header className="sticky top-0 z-40 bg-[#d4d4c8] border-b-2 border-black px-3 py-3">
+      <div className="flex items-center justify-between mb-2">
         {leftAction ? (
           <div>{leftAction}</div>
         ) : (
-          <h1 className="text-2xl font-bold">{title}</h1>
+          <h1 className="text-xl font-bold tracking-tight">{title}</h1>
         )}
         {rightAction && <div>{rightAction}</div>}
       </div>
-      {children && <div className="mt-4">{children}</div>}
+      {children && <div className="mt-3">{children}</div>}
     </header>
   )
 }

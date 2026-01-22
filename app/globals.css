@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --deep-purple: #2D242D;
-  --foreground: #ffffff;
-  --background: #000000;
+  --newton-bg: #d4d4c8;
+  --newton-fg: #000000;
+  --newton-border: #000000;
+  --newton-gray: #808080;
 }
 
 * {
@@ -19,10 +20,9 @@ body {
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: var(--background);
-  color: var(--foreground);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--newton-bg);
+  color: var(--newton-fg);
+  font-family: 'Courier New', monospace;
 }
 
 /* Hide scrollbar but keep functionality */
@@ -47,6 +47,25 @@ input,
 textarea,
 select {
   font-size: 16px;
+}
+
+/* Newton-style border effect */
+.newton-border {
+  border: 2px solid var(--newton-border);
+  box-shadow: inset 2px 2px 0px rgba(255,255,255,0.5), 
+              inset -2px -2px 0px rgba(0,0,0,0.3);
+}
+
+.newton-button {
+  border: 2px solid var(--newton-border);
+  background: var(--newton-bg);
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+  transition: all 0.1s;
+}
+
+.newton-button:active {
+  box-shadow: inset 2px 2px 0px rgba(0,0,0,0.3);
+  transform: translate(1px, 1px);
 }
 
 /* Safe area for iPhone notch */

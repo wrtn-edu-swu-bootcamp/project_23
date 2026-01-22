@@ -1,13 +1,9 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
-import BottomNav from '@/components/BottomNav'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'NAVA - Art Portfolio & Docent',
-  description: 'Art-focused Mobile Web Portfolio & Browser App',
+  title: 'NAVA',
+  description: 'Art Portfolio Manager',
 }
 
 export const viewport: Viewport = {
@@ -24,13 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="min-h-screen bg-black text-white">
-          {/* iPhone 13/14 frame: 390x844 */}
-          <div className="w-full max-w-[390px] min-h-screen mx-auto relative pb-20 bg-black">
+      <body>
+        <div className="min-h-screen bg-[#d4d4c8]">
+          {/* Newton PDA frame */}
+          <div className="w-full max-w-[390px] min-h-screen mx-auto relative bg-[#d4d4c8] border-x-4 border-black">
             {children}
           </div>
-          <BottomNav />
         </div>
       </body>
     </html>

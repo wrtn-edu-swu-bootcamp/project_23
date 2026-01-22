@@ -18,9 +18,9 @@ interface BottomNavProps {
 
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-deep-purple border-t border-gray-800 z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-[#d4d4c8] border-t-2 border-black z-50">
       <div className="w-full max-w-[390px] mx-auto">
-        <div className="flex justify-around items-center h-16 px-2">
+        <div className="grid grid-cols-4 gap-1 p-2">
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -29,12 +29,14 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
-                className={`flex flex-col items-center justify-center flex-1 h-full transition-colors touch-manipulation ${
-                  isActive ? 'text-white' : 'text-gray-400 hover:text-gray-200'
+                className={`flex flex-col items-center justify-center py-3 rounded border-2 border-black ${
+                  isActive 
+                    ? 'bg-black text-[#d4d4c8]' 
+                    : 'bg-[#d4d4c8] text-black newton-button'
                 }`}
               >
-                <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-                <span className="text-[10px] mt-1 font-medium">{tab.name}</span>
+                <Icon size={20} strokeWidth={2} />
+                <span className="text-[9px] mt-1 font-bold">{tab.name}</span>
               </button>
             )
           })}
