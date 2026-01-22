@@ -1,57 +1,63 @@
 # Project Name: NAVA
-**Art-focused Mobile Web Portfolio & Browser App**
+**Description: Mobile-optimized Art Portfolio & Browser for Artists**
 
-## 1. Design Guidelines
-- **Frame**: Optimized for iPhone 14 (390x844 px).
-- **Theme**: Minimalism, Black & White / Deep Purple (#2D242D) tones for artistic sensibility.
-- **Navigation**: Fixed Bottom Navigation Bar with 5 Tabs (FOLIO, NOTE, PLANNER, ARTICLE, VV).
-- **Typography**: 
-  - Korean: Pretendard
-  - English/Numbers: Inter
-  - Usage: Strategic mix of Bold and Medium weights.
+## ?? 1. Design & UX Guidelines
+- **Frame**: iPhone 14 (390x844) Mobile Web Optimization.
+- **Theme**: Minimalism, Black & White / Deep Purple (#2D242D).
+- **Navigation**: Fixed Bottom Bar (FOLIO, NOTE, PLANNER, ARTICLE).
+- **Typography**: **Pretendard** (KR), **Inter** (EN/Num) - Mix of Bold and Medium.
+- **Core UI Principles**:
+  - **Top Header**: Action buttons (Settings, Search, Profile) positioned at the top to avoid mobile browser toolbar overlap.
+  - **Scroll UX**: Enable smooth scrolling for overflowing content with hidden scrollbars.
+  - **In-app WebView**: External links must open in a modal/WebView to keep users in-app.
+  - **Loading Animation**: Custom loading screen using `loading_screen.gif` for all transitions and saves.
 
-## 2. Technical Stack
-- **Frontend**: Next.js (App Router), Tailwind CSS.
-- **Backend/DB**: Supabase (Database, Storage).
-- **AI**: Google Gemini 1.5 Flash API (Art Docent Chatbot).
-- **Icons**: Lucide-react.
+## ??? 2. Core Features & Tech Stack
+- **Tech**: Next.js (App Router), Tailwind CSS, Supabase (DB/Storage), Gemini 1.5 Flash API.
+- **Automation/API**: Integration readiness for Artsy API, Public Data APIs, and **n8n Agent AI**.
 
-## 3. Common UX/UI Principles
-- **Top Header Layout**: Place essential functional buttons (Settings, Search, Profile) in the top header to avoid interference with mobile browser toolbars.
-- **Loading Animation**: Implement custom loading screens using `loading_screen.gif` during page transitions and data saving.
-- **Scroll Optimization**: Enable smooth scrolling but hide the scrollbar for a clean UI.
-- **In-app WebView**: External links (from Articles) must open within an in-app modal or WebView to keep users within the app.
+### Tab 1: FOLIO (Process Archive)
+- **Upload**: Support for Multi-upload (Images & MP4 Videos).
+- **Auto-Sort**: File metadata-based chronological classification (Year/Month).
+- **UI**: Sticky headers for chronology, Toggleable Grid (2-column vs 3-column).
+- **View**: Fullscreen dark modal for detailed inspection; Caption editing support.
 
-## 4. Tab Specifications
+### Tab 2: NOTE (Inspiration Log)
+- **Editor**: Auto-save drafts, Markdown support (Bold, Underline, Quotes).
+- **Search**: Instant real-time filtering (Title + Body).
+- **Management**: Bookmark (Wish) functionality with a dedicated collection view.
+- **Social**: Export notes as stylized image cards for Instagram sharing.
 
-### Tab 1: FOLIO (Chronological Archive)
-- **Concept**: Visualizing the 'accumulation' of artistic work.
-- **Features**: Media recording (Photos/Videos) with 3-column infinite scroll grid.
-- **UI Details**: Sticky Headers for Year/Month separators, Floating Upload Button.
+### Tab 3: PLANNER (Exhibition Management - Artmap Style)
+- **Filtering**: Regional quick-jump chips + Monthly Calendar view.
+- **Details**: D-Day countdowns for closing dates, Map links (Google/Naver).
+- **Personal**: Sync exhibitions to a private planner; "Visited" check-in history.
 
-### Tab 2: NOTE (Blog-style Records)
-- **Reference**: Naver Blog / Google Blogger UX.
-- **Features**: 
-  - Editor: Distinct Title and Body input fields.
-  - Viewer: Magazine-style layout with a 'Wish' (Favorite) heart button.
-  - Search: Real-time integrated search for both titles and body content.
+### Tab 4: ARTICLE (Curation & Critique)
+- **Feed**: Infinite scroll with #Critique, #Interview, #News filters.
+- **AI Summary**: Gemini 1.5 Flash provides 3-line Korean summaries for global articles.
+- **Readability**: Ads-free "Clean View" In-app browser.
 
-### Tab 3: PLANNER (Exhibition Guide)
-- **Reference**: Artmap (Artmap) UI/UX benchmarking.
-- **Components**: Top region filter chips (Seoul, Gyeonggi, etc.) + Monthly Calendar + Bottom list of exhibition poster cards.
-- **Tech**: FullCalendar library & Public Exhibition Data API.
+## ?? 3. Development Structure (Modular Refactoring)
+- `/components/tabs/`: Individual tab logic (FolioTab.tsx, NoteTab.tsx, etc.)
+- `/components/layout/`: Shared Header and BottomNav.
+- `/components/ui/`: Shared components like LoadingScreen, Modals, and Buttons.
 
-### Tab 4: ARTICLE (Art Magazine)
-- **Features**: Integrated feed from Google Art Newsletters & External RSS. Includes 'Wish' function.
-- **Design**: Artmap-style Hero Section with large highlight banners.
+## ?? 4. Getting Started
 
-### Tab 5: VV (AI Art Docent)
-- **Persona**: 'VV' - A hip, intellectual artist friend who understands slang and context.
-- **Requirement**: **Chat History** must be implemented. VV must remember previous context (e.g., "What I ate for lunch yesterday").
+```bash
+npm install
+npm run dev
+```
 
-## 5. Project Structure
-- `/components`: Reusable UI components (Nav, Cards, Inputs).
-- `/app`: Next.js App Router (Page routes for each tab).
-- `/lib`: Client configurations for Supabase & Gemini API.
-- `/api`: Server-side API Routes for AI communication.
-- `/assets`: Project images and assets (logo, loading screen, etc.).
+Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## ?? 5. Environment Variables
+
+Create a `.env.local` file:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+```

@@ -1,24 +1,64 @@
-import Image from 'next/image'
-import Link from 'next/link'
+'use client'
+
+import { useState } from 'react'
+import BottomNav, { TabName } from '@/components/layout/BottomNav'
+import LoadingScreen from '@/components/ui/LoadingScreen'
+import dynamic from 'next/dynamic'
+
+// Lazy load tab components
+const FolioTab = dynamic(() => import('@/components/tabs/FolioTab'), {
+  loading: () => <LoadingScreen show={true} />,
+})
+
+const NoteTab = dynamic(() => import('@/components/tabs/NoteTab'), {
+  loading: () => <LoadingScreen show={true} />,
+})
+
+const PlannerTab = dynamic(() => import('@/components/tabs/PlannerTab'), {
+  loading: () => <LoadingScreen show={true} />,
+})
+
+const ArticleTab = dynamic(() => import('@/components/tabs/ArticleTab'), {
+  loading: () => <LoadingScreen show={true} />,
+})
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<TabName>('folio')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleTabChange = (tab: TabName) => {
+    if (tab === activeTab) return
+    
+    setIsLoading(true)
+    setTimeout(() => {
+      setActiveTab(tab)
+      setIsLoading(false)
+    }, 200)
+  }
+
+  const renderTab = () => {
+    switch (activeTab) {
+      case 'folio':
+        return <FolioTab />
+      case 'note':
+        return <NoteTab />
+      case 'planner':
+        return <PlannerTab />
+      case 'article':
+        return <ArticleTab />
+      default:
+        return null
+    }
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6">
-      <div className="text-center space-y-8">
-        <h1 className="text-6xl font-bold tracking-tight">NAVA</h1>
-        <p className="text-lg text-gray-400 leading-relaxed">
-          Art-focused Mobile Web Portfolio & Browser App
-        </p>
-        
-        <div className="mt-12 space-y-4">
-          <Link 
-            href="/folio"
-            className="block w-full py-4 px-8 bg-deep-purple rounded-xl font-semibold hover:bg-opacity-80 transition-all active:scale-95"
-          >
-            Start Exploring
-          </Link>
-        </div>
+    <>
+      <LoadingScreen show={isLoading} />
+      
+      <div className="min-h-screen bg-black">
+        {renderTab()}
+        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
       </div>
-    </main>
+    </>
   )
 }
