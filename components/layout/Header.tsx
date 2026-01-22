@@ -16,12 +16,12 @@ export default function Header({
   transparent = false
 }: HeaderProps) {
   return (
-    <header className={`sticky top-0 z-40 ${transparent ? 'bg-black/80' : 'bg-black/95'} backdrop-blur-sm border-b border-gray-800 px-4 py-4`}>
+    <header className={`sticky top-0 z-40 ${transparent ? 'bg-black/80' : 'bg-black'} border-b-2 border-white px-4 py-4`}>
       <div className="flex items-center justify-between">
         {leftAction ? (
           <div>{leftAction}</div>
         ) : (
-          <h1 className="text-2xl font-bold">{title}</h1>
+          <h1 className="text-xl font-bitmap uppercase tracking-wider">{title}</h1>
         )}
         {rightAction && <div>{rightAction}</div>}
       </div>

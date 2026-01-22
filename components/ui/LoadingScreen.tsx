@@ -1,8 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 
-export default function LoadingScreen({ show }: { show: boolean }) {
+interface LoadingScreenProps {
+  show: boolean
+  useGif?: boolean // Option to use custom GIF
+  gifPath?: string // Path to custom loading GIF
+}
+
+export default function LoadingScreen({ 
+  show, 
+  useGif = false,
+  gifPath = '/assets/loading_screen.gif'
+}: LoadingScreenProps) {
   const [isVisible, setIsVisible] = useState(show)
 
   useEffect(() => {
@@ -18,28 +29,45 @@ export default function LoadingScreen({ show }: { show: boolean }) {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-300 pixel-grid ${
         show ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="text-center space-y-6">
-        {/* Logo Animation */}
-        <div className="relative w-24 h-24 mx-auto">
-          <div className="absolute inset-0 bg-deep-purple rounded-full animate-ping opacity-20" />
-          <div className="relative w-full h-full bg-deep-purple rounded-full flex items-center justify-center">
-            <span className="text-4xl font-bold">N</span>
+      {useGif ? (
+        // Custom GIF Loading Animation
+        <div className="text-center">
+          <div className="relative w-32 h-32 mx-auto border-4 border-white">
+            <Image
+              src={gifPath}
+              alt="Loading..."
+              fill
+              className="object-contain"
+              unoptimized // Required for GIFs to animate
+              priority
+            />
           </div>
         </div>
-        
-        {/* Loading Dots */}
-        <div className="flex gap-2 justify-center">
-          <div className="w-2 h-2 bg-deep-purple rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-2 h-2 bg-deep-purple rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-2 h-2 bg-deep-purple rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+      ) : (
+        // Default Bitmap Animation
+        <div className="text-center space-y-6">
+          {/* Bitmap Logo Animation */}
+          <div className="relative w-24 h-24 mx-auto">
+            <div className="absolute inset-0 border-4 border-white animate-ping" />
+            <div className="relative w-full h-full border-4 border-white bg-black flex items-center justify-center">
+              <span className="text-3xl font-bitmap">N</span>
+            </div>
+          </div>
+          
+          {/* Bitmap Loading Blocks */}
+          <div className="flex gap-2 justify-center">
+            <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '0ms' }} />
+            <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '200ms' }} />
+            <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '400ms' }} />
+          </div>
+          
+          <p className="text-gray-400 text-xs font-pixel uppercase tracking-wider">Loading...</p>
         </div>
-        
-        <p className="text-gray-400 text-sm">Loading...</p>
-      </div>
+      )}
     </div>
   )
 }

@@ -2,16 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Pretendard Font - CDN Fallback */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+/* Bitmap/Retro Font */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap');
+
 :root {
   --deep-purple: #2D242D;
   --foreground: #ffffff;
   --background: #000000;
+  --border-width: 2px;
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 html,
@@ -21,17 +31,80 @@ body {
   overflow-x: hidden;
   background-color: var(--background);
   color: var(--foreground);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
 }
 
-/* Hide scrollbar but keep functionality */
-body::-webkit-scrollbar,
+/* Bitmap style borders */
+.bitmap-border {
+  border: var(--border-width) solid currentColor;
+  border-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0,
+    currentColor 2px,
+    transparent 2px,
+    transparent 4px
+  ) 2;
+}
+
+/* Pixel perfect grid */
+.pixel-grid {
+  background-image: 
+    linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .02) 25%, rgba(255, 255, 255, .02) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .02) 75%, rgba(255, 255, 255, .02) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .02) 25%, rgba(255, 255, 255, .02) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .02) 75%, rgba(255, 255, 255, .02) 76%, transparent 77%, transparent);
+  background-size: 4px 4px;
+}
+
+/* Bitmap Style Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+  border: 2px solid #333333;
+  box-shadow: inset 2px 2px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border: 2px solid #000000;
+  box-shadow: 
+    2px 2px 0 0 rgba(255, 255, 255, 0.3),
+    inset -1px -1px 0 0 rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cccccc;
+  box-shadow: 
+    2px 2px 0 0 rgba(255, 255, 255, 0.5),
+    inset -1px -1px 0 0 rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #999999;
+  box-shadow: 
+    1px 1px 0 0 rgba(255, 255, 255, 0.3),
+    inset -1px -1px 0 0 rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: #000000;
+  border: 2px solid #333333;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ffffff #000000;
+}
+
+/* Hide scrollbar option (for specific elements) */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-body,
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -47,6 +120,36 @@ input,
 textarea,
 select {
   font-size: 16px;
+}
+
+/* Bitmap button style */
+.btn-bitmap {
+  position: relative;
+  border: 2px solid currentColor;
+  box-shadow: 
+    2px 2px 0 0 currentColor,
+    4px 4px 0 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.1s;
+}
+
+.btn-bitmap:active {
+  box-shadow: 
+    1px 1px 0 0 currentColor;
+  transform: translate(1px, 1px);
+}
+
+/* Bitmap card style */
+.card-bitmap {
+  border: 2px solid #ffffff;
+  box-shadow: 
+    4px 4px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Retro text shadow */
+.text-bitmap {
+  text-shadow: 
+    2px 2px 0 rgba(0, 0, 0, 0.5),
+    -1px -1px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Safe area for iPhone notch */

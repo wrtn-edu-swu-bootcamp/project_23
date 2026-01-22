@@ -122,3 +122,69 @@ export function normalizeExhibition(exhibition: any, source: 'culture' | 'manual
   }
   return exhibition
 }
+
+// 5. OpenAI 번역 API (직접 호출)
+export async function translateArticle(text: string, targetLang: string = 'ko') {
+  try {
+    const response = await fetch('/api/translate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text, targetLang }),
+    })
+    
+    if (!response.ok) {
+      throw new Error('Translation request failed')
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error('Translation Error:', error)
+    return null
+  }
+}
+
+// 6. AI 기사 검색 (OpenAI 기반)
+export async function searchAIArticles(query: string) {
+  try {
+    const response = await fetch('/api/search-articles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    })
+    
+    if (!response.ok) {
+      throw new Error('Search request failed')
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error('Search Error:', error)
+    return { articles: [] }
+  }
+}
+
+// n8n AI Agent 호출 (선택적 - n8n 사용 시)
+export async function callN8nAI(action: string, data: any) {
+  try {
+    const response = await fetch('/api/n8n-ai', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ action, data }),
+    })
+    
+    if (!response.ok) {
+      throw new Error('n8n AI request failed')
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error('n8n AI Error:', error)
+    return null
+  }
+}

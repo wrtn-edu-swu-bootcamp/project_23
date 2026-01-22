@@ -131,36 +131,40 @@ export default function PlannerTab() {
         <div className="flex gap-2">
           <button
             onClick={() => setActiveView('calendar')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeView === 'calendar' ? 'bg-deep-purple text-white' : 'bg-gray-800 text-gray-400'
+            className={`flex-1 py-2 border-2 text-xs font-pixel uppercase transition-all ${
+              activeView === 'calendar' 
+                ? 'bg-white text-black border-white shadow-bitmap' 
+                : 'bg-black text-white border-white hover:bg-white hover:text-black'
             }`}
           >
-            <CalendarIcon size={16} className="inline mr-1" />
-            Calendar
+            <CalendarIcon size={14} className="inline mr-1" />
+            CAL
           </button>
           <button
             onClick={() => setActiveView('wishlist')}
-            className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
-              activeView === 'wishlist' ? 'bg-deep-purple text-white' : 'bg-gray-800 text-gray-400'
+            className={`flex-1 py-2 border-2 text-xs font-pixel uppercase transition-all ${
+              activeView === 'wishlist' 
+                ? 'bg-white text-black border-white shadow-bitmap' 
+                : 'bg-black text-white border-white hover:bg-white hover:text-black'
             }`}
           >
-            <Heart size={16} className="inline mr-1" />
-            Wishlist
+            <Heart size={14} className="inline mr-1" />
+            WISH
           </button>
         </div>
       </Header>
 
       {/* Mini Calendar */}
-      <div className="px-4 py-4 bg-gray-900/50">
+      <div className="px-4 py-4 border-b-2 border-white">
         <div className="flex items-center justify-between mb-3">
-          <button onClick={prevMonth} className="p-2 hover:bg-gray-800 rounded">
-            <ChevronLeft size={20} />
+          <button onClick={prevMonth} className="p-2 border-2 border-white bg-black hover:bg-white hover:text-black transition-colors">
+            <ChevronLeft size={16} />
           </button>
-          <h3 className="font-semibold">
+          <h3 className="font-pixel text-sm uppercase">
             {currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
           </h3>
-          <button onClick={nextMonth} className="p-2 hover:bg-gray-800 rounded">
-            <ChevronRight size={20} />
+          <button onClick={nextMonth} className="p-2 border-2 border-white bg-black hover:bg-white hover:text-black transition-colors">
+            <ChevronRight size={16} />
           </button>
         </div>
       </div>
@@ -180,21 +184,21 @@ export default function PlannerTab() {
               <Card key={exhibition.id} className="relative">
                 <div className="flex gap-4">
                   <div
-                    className="w-24 h-24 flex-shrink-0 bg-gray-800 rounded-lg bg-cover bg-center"
+                    className="w-24 h-24 flex-shrink-0 bg-black border-2 border-white bg-cover bg-center"
                     style={{ backgroundImage: `url(${exhibition.poster})` }}
                   />
                   <div className="flex-1">
-                    <h3 className="font-bold text-sm mb-1 line-clamp-2">{exhibition.title}</h3>
-                    <p className="text-xs text-gray-400 mb-2 flex items-center gap-1">
-                      <MapPin size={12} />
+                    <h3 className="font-pixel text-xs mb-2 line-clamp-2 uppercase">{exhibition.title}</h3>
+                    <p className="text-[10px] text-gray-400 mb-2 flex items-center gap-1 font-pixel">
+                      <MapPin size={10} />
                       {exhibition.location}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-[10px] text-gray-500 font-pixel">
                       {new Date(exhibition.startDate).toLocaleDateString('ko-KR')} ~{' '}
                       {new Date(exhibition.endDate).toLocaleDateString('ko-KR')}
                     </p>
                     {daysLeft >= 0 && (
-                      <p className="text-xs text-deep-purple mt-1">D-{daysLeft}</p>
+                      <p className="text-[10px] text-white mt-1 font-pixel border border-white inline-block px-1">D-{daysLeft}</p>
                     )}
                   </div>
                 </div>
@@ -203,28 +207,28 @@ export default function PlannerTab() {
                 <div className="flex gap-2 mt-3">
                   <button
                     onClick={() => toggleWishlist(exhibition.id)}
-                    className="text-sm text-gray-400 hover:text-white"
+                    className="border-2 border-white p-1 hover:bg-white hover:text-black transition-colors"
                   >
                     <Heart
-                      size={18}
-                      className={wishlist.has(exhibition.id) ? 'fill-red-500 text-red-500' : ''}
+                      size={16}
+                      className={wishlist.has(exhibition.id) ? 'fill-white' : ''}
                     />
                   </button>
                   <button
                     onClick={() => toggleVisited(exhibition.id)}
-                    className={`text-xs px-2 py-1 rounded ${
-                      exhibition.visited ? 'bg-deep-purple text-white' : 'bg-gray-800 text-gray-400'
+                    className={`text-[10px] px-2 py-1 border-2 font-pixel uppercase ${
+                      exhibition.visited ? 'bg-white text-black border-white' : 'bg-black text-white border-white hover:bg-gray-900'
                     }`}
                   >
-                    {exhibition.visited ? '방문함' : '방문 표시'}
+                    {exhibition.visited ? 'VISITED' : 'MARK'}
                   </button>
                   <a
                     href={exhibition.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="ml-auto text-sm text-deep-purple hover:underline flex items-center gap-1"
+                    className="ml-auto text-[10px] text-white hover:underline flex items-center gap-1 font-pixel uppercase border-2 border-white px-2 py-1 hover:bg-white hover:text-black transition-colors"
                   >
-                    자세히 <ExternalLink size={14} />
+                    INFO <ExternalLink size={10} />
                   </a>
                 </div>
               </Card>
