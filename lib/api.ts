@@ -239,3 +239,27 @@ export async function searchRSSArticles(query: string, sourceId?: string) {
     return { articles: [] }
   }
 }
+
+// 9. n8n으로 소스별 최신 기사 가져오기 (NEW!)
+export async function fetchArticlesBySource(sourceId: string, limit: number = 20) {
+  try {
+    const response = await fetch('/api/articles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ sourceId, limit }),
+    })
+    
+    if (!response.ok) {
+      const error = await response.json()
+      console.error('Failed to fetch articles:', error)
+      return null
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error('Fetch articles error:', error)
+    return null
+  }
+}
