@@ -22,7 +22,7 @@ export default function LoadingScreen({ show }: LoadingScreenProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-300 pixel-grid ${
         show ? 'opacity-100' : 'opacity-0'
       }`}
     >
@@ -32,18 +32,19 @@ export default function LoadingScreen({ show }: LoadingScreenProps) {
           <img
             src="/assets/logo.png"
             alt="Loading..."
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain brightness-0 invert"
+            style={{ filter: 'brightness(0) invert(1)' }}
           />
         </div>
         
         {/* Loading Dots */}
         <div className="flex gap-2 justify-center">
-          <div className="w-3 h-3 border-2 border-black bg-black animate-pulse" style={{ animationDelay: '0ms' }} />
-          <div className="w-3 h-3 border-2 border-black bg-black animate-pulse" style={{ animationDelay: '200ms' }} />
-          <div className="w-3 h-3 border-2 border-black bg-black animate-pulse" style={{ animationDelay: '400ms' }} />
+          <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '0ms' }} />
+          <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '200ms' }} />
+          <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '400ms' }} />
         </div>
         
-        <p className="text-gray-600 text-xs font-pixel uppercase tracking-wider">Loading...</p>
+        <p className="text-gray-400 text-xs font-pixel uppercase tracking-wider">Loading...</p>
       </div>
     </div>
   )
