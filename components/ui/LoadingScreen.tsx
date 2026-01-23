@@ -11,8 +11,8 @@ interface LoadingScreenProps {
 
 export default function LoadingScreen({ 
   show, 
-  useGif = false,
-  gifPath = '/assets/loading_screen.gif'
+  useGif = true,
+  gifPath = '/assets/logo.png'
 }: LoadingScreenProps) {
   const [isVisible, setIsVisible] = useState(show)
 
@@ -34,18 +34,27 @@ export default function LoadingScreen({
       }`}
     >
       {useGif ? (
-        // Custom GIF Loading Animation
-        <div className="text-center">
-          <div className="relative w-32 h-32 mx-auto border-4 border-white">
+        // Logo Image Animation
+        <div className="text-center space-y-6">
+          <div className="relative w-48 h-48 mx-auto">
             <Image
               src={gifPath}
               alt="Loading..."
               fill
               className="object-contain"
-              unoptimized // Required for GIFs to animate
+              unoptimized
               priority
             />
           </div>
+          
+          {/* Loading Dots */}
+          <div className="flex gap-2 justify-center">
+            <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '0ms' }} />
+            <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '200ms' }} />
+            <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '400ms' }} />
+          </div>
+          
+          <p className="text-gray-400 text-xs font-pixel uppercase tracking-wider">Loading...</p>
         </div>
       ) : (
         // Bitmap Logo Animation
