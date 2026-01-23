@@ -1,0 +1,132 @@
+{
+  "name": "아트허브 통합 서비스 (초보자용)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "arthub",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "1️⃣ Webhook 시작",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 400],
+      "notes": "여기서 요청을 받습니다!\n\n예시 요청:\n{\n  \"category\": \"archive-ongoing\",\n  \"limit\": 10\n}"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎯 카테고리별 URL 매핑\nconst ARTHUB_URLS = {\n  // 아카이브 (전시)\n  'archive-ongoing': 'https://www.arthub.co.kr/exhibitions',\n  'archive-new': 'https://www.arthub.co.kr/exhibitions?sort=new',\n  'archive-upcoming': 'https://www.arthub.co.kr/exhibitions?status=upcoming',\n  \n  // 큐레이션\n  'curation-column': 'https://www.arthub.co.kr/curation/columns',\n  'curation-news': 'https://www.arthub.co.kr/curation/news',\n  \n  // 기타\n  'artjob': 'https://www.arthub.co.kr/artjob',\n  'review': 'https://www.arthub.co.kr/review'\n};\n\nconst category = $input.first().json.body.category || 'archive-ongoing';\nconst targetUrl = ARTHUB_URLS[category];\nconst limit = $input.first().json.body.limit || 10;\n\nif (!targetUrl) {\n  throw new Error(`알 수 없는 카테고리: ${category}`);\n}\n\nconsole.log(`✅ 카테고리: ${category}`);\nconsole.log(`🌐 URL: ${targetUrl}`);\n\nreturn {\n  json: {\n    category,\n    targetUrl,\n    limit,\n    originalRequest: $input.first().json.body\n  }\n};"
+      },
+      "id": "code-1",
+      "name": "2️⃣ 카테고리 URL 설정",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [400, 400],
+      "notes": "요청한 카테고리에 맞는 URL을 찾습니다"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.targetUrl }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "http-1",
+      "name": "3️⃣ 웹페이지 가져오기",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [550, 400],
+      "notes": "아트허브 웹사이트에서 HTML을 가져옵니다"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔍 HTML에서 콘텐츠 추출 (간단 버전)\nconst html = $input.first().json.data || '';\nconst category = $('2️⃣ 카테고리 URL 설정').first().json.category;\nconst limit = $('2️⃣ 카테고리 URL 설정').first().json.limit;\n\nconsole.log(`📄 HTML 길이: ${html.length}자`);\n\n// 🎨 더미 데이터 생성 (실제 스크래핑은 웹사이트 구조 분석 필요)\nconst categoryNames = {\n  'archive-ongoing': '진행중인 전시',\n  'archive-new': '신규 전시',\n  'archive-upcoming': '예정 전시',\n  'curation-column': '칼럼',\n  'curation-news': '아트뉴스',\n  'artjob': '아트잡',\n  'review': '평론'\n};\n\nconst items = [];\nfor (let i = 0; i < limit; i++) {\n  items.push({\n    id: `arthub-${category}-${Date.now()}-${i}`,\n    title: `[${categoryNames[category]}] 샘플 콘텐츠 ${i + 1}`,\n    summary: `이것은 ${categoryNames[category]} 카테고리의 샘플 콘텐츠입니다. 실제 구현 시 HTML 파싱으로 실제 데이터를 추출합니다.`,\n    url: `https://www.arthub.co.kr/detail/${i}`,\n    thumbnail: `https://via.placeholder.com/300x200?text=Sample+${i+1}`,\n    source: 'arthub',\n    sourceId: 'arthub',\n    category: category,\n    categoryName: categoryNames[category],\n    date: new Date().toISOString(),\n    language: 'ko',\n    \n    // AI가 분석할 원본 데이터\n    rawData: {\n      htmlLength: html.length,\n      extractedAt: new Date().toISOString()\n    }\n  });\n}\n\nconsole.log(`✅ ${items.length}개 아이템 추출 완료`);\n\nreturn items.map(item => ({ json: item }));"
+      },
+      "id": "code-2",
+      "name": "4️⃣ 콘텐츠 추출",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 400],
+      "notes": "HTML에서 제목, 링크, 이미지를 추출합니다\n\n⚠️ 현재는 샘플 데이터를 생성합니다\n실제 구현 시 HTML 파싱 코드로 교체하세요"
+    },
+    {
+      "parameters": {
+        "text": "=다음 아트 콘텐츠를 분석하고 개선해주세요:\n\n제목: {{ $json.title }}\n요약: {{ $json.summary }}\n카테고리: {{ $json.categoryName }}\n\n다음 작업을 수행해주세요:\n1. 제목을 더 매력적으로 개선\n2. 3줄 이내의 간단한 요약 작성\n3. 관련 키워드 3개 추출\n4. 콘텐츠 유형 분류 (전시/작가/리뷰/뉴스/채용)\n\n반드시 다음 JSON 형식으로 응답:\n{\n  \"improvedTitle\": \"개선된 제목\",\n  \"summary\": \"3줄 요약\",\n  \"keywords\": [\"키워드1\", \"키워드2\", \"키워드3\"],\n  \"contentType\": \"전시|작가|리뷰|뉴스|채용\"\n}",
+        "options": {
+          "systemMessage": "=당신은 한국 미술 콘텐츠 분석 전문가입니다.\n\n역할:\n- 아트 콘텐츠의 제목과 내용을 분석\n- 더 매력적이고 SEO 친화적인 제목 생성\n- 핵심 내용을 3줄로 요약\n- 검색에 유용한 키워드 추출\n- 콘텐츠 유형 분류\n\n출력:\n- 반드시 JSON 형식으로만 응답\n- 한국어 사용\n- 다른 설명 없이 JSON만 반환"
+        }
+      },
+      "id": "ai-agent-1",
+      "name": "5️⃣ AI 분석 (Gemini)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [850, 400],
+      "notes": "⚙️ 설정 필요:\n1. Chat Model 추가\n2. Google Gemini Chat Model 선택\n3. Credential 연결\n4. Model: gemini-pro"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🤖 AI 응답 파싱\nconst originalItem = $('4️⃣ 콘텐츠 추출').item.json;\nconst aiResponse = $input.first().json;\n\ntry {\n  // AI 응답에서 JSON 추출\n  let responseText = aiResponse.output || aiResponse.text || '';\n  \n  console.log('🔍 AI 응답:', responseText.substring(0, 200));\n  \n  // JSON 부분만 추출\n  const jsonMatch = responseText.match(/\\{[\\s\\S]*\\}/);\n  \n  if (jsonMatch) {\n    const aiResult = JSON.parse(jsonMatch[0]);\n    \n    console.log('✅ AI 파싱 성공');\n    \n    return {\n      json: {\n        ...originalItem,\n        // AI가 개선한 내용\n        title: aiResult.improvedTitle || originalItem.title,\n        summary: aiResult.summary || originalItem.summary,\n        keywords: aiResult.keywords || [],\n        contentType: aiResult.contentType || 'general',\n        \n        // 원본 데이터 보존\n        original: {\n          title: originalItem.title,\n          summary: originalItem.summary\n        },\n        \n        // AI 처리 완료 표시\n        aiProcessed: true\n      }\n    };\n  } else {\n    console.warn('⚠️ JSON 추출 실패, 원본 반환');\n    throw new Error('No JSON found');\n  }\n} catch (error) {\n  console.log('❌ AI 파싱 에러:', error.message);\n  \n  // 에러 시 원본 데이터 반환\n  return {\n    json: {\n      ...originalItem,\n      keywords: [],\n      contentType: 'general',\n      aiProcessed: false,\n      error: error.message\n    }\n  };\n}"
+      },
+      "id": "code-3",
+      "name": "6️⃣ AI 응답 파싱",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1000, 400],
+      "notes": "AI의 JSON 응답을 파싱하여 데이터에 추가합니다"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📦 최종 응답 포맷팅\nconst allItems = $input.all().map(item => item.json);\nconst category = $('2️⃣ 카테고리 URL 설정').first().json.category;\n\nconst categoryNames = {\n  'archive-ongoing': '진행중인 전시',\n  'archive-new': '신규 전시',\n  'archive-upcoming': '예정 전시',\n  'curation-column': '칼럼',\n  'curation-news': '아트뉴스',\n  'artjob': '아트잡',\n  'review': '평론'\n};\n\nconsole.log(`📊 최종 아이템 수: ${allItems.length}`);\n\n// 통계 계산\nconst aiProcessedCount = allItems.filter(item => item.aiProcessed).length;\nconst contentTypes = {};\nallItems.forEach(item => {\n  const type = item.contentType || 'general';\n  contentTypes[type] = (contentTypes[type] || 0) + 1;\n});\n\nreturn [{\n  json: {\n    success: true,\n    source: 'arthub',\n    sourceId: 'arthub',\n    category: category,\n    categoryName: categoryNames[category],\n    \n    // 📰 콘텐츠 목록\n    items: allItems,\n    \n    // 📊 통계\n    stats: {\n      total: allItems.length,\n      aiProcessed: aiProcessedCount,\n      contentTypes: contentTypes\n    },\n    \n    // ⏰ 메타데이터\n    metadata: {\n      timestamp: new Date().toISOString(),\n      requestCategory: category,\n      processingTime: Date.now() - $('1️⃣ Webhook 시작').first().json.$now\n    }\n  }\n}];"
+      },
+      "id": "code-4",
+      "name": "7️⃣ 최종 응답 포맷",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1150, 400],
+      "notes": "모든 데이터를 정리하여 최종 응답을 만듭니다"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-1",
+      "name": "8️⃣ 응답 반환",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1300, 400],
+      "notes": "클라이언트에게 결과를 반환합니다"
+    }
+  ],
+  "connections": {
+    "1️⃣ Webhook 시작": {
+      "main": [[{"node": "2️⃣ 카테고리 URL 설정", "type": "main", "index": 0}]]
+    },
+    "2️⃣ 카테고리 URL 설정": {
+      "main": [[{"node": "3️⃣ 웹페이지 가져오기", "type": "main", "index": 0}]]
+    },
+    "3️⃣ 웹페이지 가져오기": {
+      "main": [[{"node": "4️⃣ 콘텐츠 추출", "type": "main", "index": 0}]]
+    },
+    "4️⃣ 콘텐츠 추출": {
+      "main": [[{"node": "5️⃣ AI 분석 (Gemini)", "type": "main", "index": 0}]]
+    },
+    "5️⃣ AI 분석 (Gemini)": {
+      "main": [[{"node": "6️⃣ AI 응답 파싱", "type": "main", "index": 0}]]
+    },
+    "6️⃣ AI 응답 파싱": {
+      "main": [[{"node": "7️⃣ 최종 응답 포맷", "type": "main", "index": 0}]]
+    },
+    "7️⃣ 최종 응답 포맷": {
+      "main": [[{"node": "8️⃣ 응답 반환", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

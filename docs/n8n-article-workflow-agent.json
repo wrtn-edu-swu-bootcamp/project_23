@@ -1,0 +1,148 @@
+{
+  "name": "Article RSS with AI Agent (Gemini)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "article-rss",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// RSS 소스 URL 매핑\nconst RSS_FEEDS = {\n  'artnet': 'https://news.artnet.com/feed',\n  'artnewspaper': 'https://www.theartnewspaper.com/rss',\n  'arthub': 'https://www.arthub.co.kr/feed/rss',\n  'neolook': 'https://neolook.com/rss',\n  'monthlyart': 'https://monthlyart.com/feed'\n};\n\nconst sourceId = $input.first().json.body.sourceId;\nconst feedUrl = RSS_FEEDS[sourceId];\n\nreturn {\n  json: {\n    sourceId,\n    feedUrl,\n    body: $input.first().json.body\n  }\n};"
+      },
+      "id": "code-1",
+      "name": "Get Feed URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [350, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.feedUrl }}",
+        "options": {}
+      },
+      "id": "http-1",
+      "name": "Fetch RSS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 간단한 RSS 파싱\nconst rssXml = $input.first().json.data;\nconst sourceId = $('Get Feed URL').first().json.sourceId;\n\nconst itemRegex = /<item[^>]*>([\\s\\S]*?)<\\/item>/gi;\nconst titleRegex = /<title><!\\[CDATA\\[([^\\]]+)\\]\\]><\\/title>|<title>([^<]+)<\\/title>/i;\nconst linkRegex = /<link>([^<]+)<\\/link>/i;\nconst descRegex = /<description><!\\[CDATA\\[([^\\]]+)\\]\\]><\\/description>|<description>([^<]+)<\\/description>/i;\nconst pubDateRegex = /<pubDate>([^<]+)<\\/pubDate>/i;\nconst guidRegex = /<guid[^>]*>([^<]+)<\\/guid>/i;\n\nconst items = [];\nlet match;\nlet index = 0;\n\nwhile ((match = itemRegex.exec(rssXml)) !== null && index < 5) {\n  const itemXml = match[1];\n  \n  const titleMatch = titleRegex.exec(itemXml);\n  const linkMatch = linkRegex.exec(itemXml);\n  const descMatch = descRegex.exec(itemXml);\n  const dateMatch = pubDateRegex.exec(itemXml);\n  const guidMatch = guidRegex.exec(itemXml);\n  \n  const title = titleMatch ? (titleMatch[1] || titleMatch[2] || '').trim() : '';\n  const link = linkMatch ? linkMatch[1].trim() : '';\n  const description = descMatch ? (descMatch[1] || descMatch[2] || '').trim() : '';\n  const pubDate = dateMatch ? dateMatch[1].trim() : new Date().toISOString();\n  const guid = guidMatch ? guidMatch[1].trim() : link;\n  \n  if (title && link) {\n    items.push({\n      id: guid || `${sourceId}-${index}`,\n      title: title,\n      summary: description.replace(/<[^>]*>/g, '').substring(0, 300),\n      url: link,\n      source: sourceId,\n      sourceId: sourceId,\n      date: pubDate,\n      thumbnail: '',\n      language: ['arthub', 'neolook', 'monthlyart'].includes(sourceId) ? 'ko' : 'en'\n    });\n    index++;\n  }\n}\n\nreturn items.map(item => ({ json: item }));"
+      },
+      "id": "code-2",
+      "name": "Parse RSS",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [550, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.language }}",
+              "operation": "equals",
+              "value2": "en"
+            }
+          ]
+        }
+      },
+      "id": "if-1",
+      "name": "IF English",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "text": "=다음 영어 아트 뉴스를 한국어로 번역하고 분석해주세요:\n\n제목: {{ $json.title }}\n요약: {{ $json.summary }}\n\n반드시 다음 JSON 형식으로 응답해주세요:\n{\n  \"translatedTitle\": \"번역된 제목\",\n  \"translatedSummary\": \"번역된 요약 (200자 이내)\",\n  \"category\": \"Exhibition/Auction/Review/News 중 하나\",\n  \"tags\": [\"태그1\", \"태그2\"]\n}",
+        "options": {
+          "systemMessage": "=당신은 아트 뉴스 번역 및 분류 전문가입니다.\n\n역할:\n- 영어 아트 뉴스를 자연스러운 한국어로 번역\n- 뉴스의 카테고리를 분석하여 분류\n- 관련 태그를 추출\n\n출력:\n- 반드시 JSON 형식으로만 응답\n- 다른 설명이나 텍스트는 포함하지 않음"
+        },
+        "chatModel": {
+          "model": "gemini-pro",
+          "credential": "googleGeminiApi"
+        }
+      },
+      "id": "ai-agent-1",
+      "name": "AI Agent (Gemini)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [750, 250]
+    },
+    {
+      "parameters": {
+        "jsCode": "// AI Agent 응답 파싱\nconst article = $('Parse RSS').item.json;\nconst agentResponse = $input.first().json;\n\ntry {\n  // Agent 응답에서 JSON 추출\n  let responseText = agentResponse.output || agentResponse.text || '';\n  \n  // JSON 부분만 추출 (```json ``` 제거)\n  const jsonMatch = responseText.match(/\\{[\\s\\S]*\\}/);\n  if (jsonMatch) {\n    responseText = jsonMatch[0];\n  }\n  \n  const aiResult = JSON.parse(responseText);\n  \n  return {\n    json: {\n      ...article,\n      translatedTitle: aiResult.translatedTitle,\n      translatedSummary: aiResult.translatedSummary,\n      category: aiResult.category || 'Art News',\n      tags: aiResult.tags || []\n    }\n  };\n} catch (error) {\n  console.log('Parse error:', error);\n  // 번역 실패시 원본 반환\n  return {\n    json: {\n      ...article,\n      category: 'Art News',\n      tags: []\n    }\n  };\n}"
+      },
+      "id": "code-3",
+      "name": "Parse AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 250]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 모든 아티클 수집\nconst processedArticles = $input.all().map(item => item.json);\nconst sourceId = $('Get Feed URL').first().json.sourceId;\n\nreturn [{\n  json: {\n    success: true,\n    sourceId: sourceId,\n    articles: processedArticles,\n    total: processedArticles.length,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "code-4",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [950, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond-1",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Get Feed URL", "type": "main", "index": 0}]]
+    },
+    "Get Feed URL": {
+      "main": [[{"node": "Fetch RSS", "type": "main", "index": 0}]]
+    },
+    "Fetch RSS": {
+      "main": [[{"node": "Parse RSS", "type": "main", "index": 0}]]
+    },
+    "Parse RSS": {
+      "main": [[{"node": "IF English", "type": "main", "index": 0}]]
+    },
+    "IF English": {
+      "main": [
+        [{"node": "AI Agent (Gemini)", "type": "main", "index": 0}],
+        [{"node": "Format Response", "type": "main", "index": 0}]
+      ]
+    },
+    "AI Agent (Gemini)": {
+      "main": [[{"node": "Parse AI Response", "type": "main", "index": 0}]]
+    },
+    "Parse AI Response": {
+      "main": [[{"node": "Format Response", "type": "main", "index": 0}]]
+    },
+    "Format Response": {
+      "main": [[{"node": "Respond to Webhook", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
