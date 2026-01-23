@@ -263,3 +263,39 @@ export async function fetchArticlesBySource(sourceId: string, limit: number = 20
     return null
   }
 }
+
+// 10. 아트허브 콘텐츠 가져오기 (n8n + AI Agent)
+export async function fetchArthubContent(category: string, limit: number = 10) {
+  try {
+    const response = await fetch('/api/arthub', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ category, limit }),
+    })
+    
+    if (!response.ok) {
+      const error = await response.json()
+      console.error('Failed to fetch ArthHub content:', error)
+      return {
+        success: false,
+        source: 'arthub',
+        category,
+        items: [],
+        stats: { total: 0, aiProcessed: 0 },
+      }
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error('ArthHub API Error:', error)
+    return {
+      success: false,
+      source: 'arthub',
+      category,
+      items: [],
+      stats: { total: 0, aiProcessed: 0 },
+    }
+  }
+}

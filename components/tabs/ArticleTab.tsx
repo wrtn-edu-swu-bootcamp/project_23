@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 import { Search, Bookmark, ExternalLink, Languages, Sparkles, Globe, ChevronRight } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import { Card, SearchInput, EmptyState, LoadingSpinner } from '@/components/ui/CommonUI'
-import { translateArticle, fetchRSSArticles, searchRSSArticles } from '@/lib/api'
-import { ART_NEWS_SOURCES } from '@/lib/constants'
+import { translateArticle, fetchRSSArticles, searchRSSArticles, fetchArthubContent } from '@/lib/api'
+import { ART_NEWS_SOURCES, ARTHUB_CATEGORIES } from '@/lib/constants'
 
 interface Article {
   id: string
@@ -26,6 +26,7 @@ export default function ArticleTab() {
   const [articles, setArticles] = useState<Article[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSource, setSelectedSource] = useState<string | null>(null)
+  const [selectedArthubCategory, setSelectedArthubCategory] = useState<string | null>(null)
   const [savedArticles, setSavedArticles] = useState<Set<string>>(new Set())
   const [isLoading, setIsLoading] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
@@ -44,8 +45,17 @@ export default function ArticleTab() {
   useEffect(() => {
     if (selectedSource) {
       loadArticles(selectedSource)
+      setSelectedArthubCategory(null) // Clear ArthHub category
     }
   }, [selectedSource])
+
+  // Load ArthHub content when category is selected
+  useEffect(() => {
+    if (selectedArthubCategory) {
+      loadArthubContent(selectedArthubCategory)
+      setSelectedSource(null) // Clear RSS source
+    }
+  }, [selectedArthubCategory])
 
   // Search with debounce
   useEffect(() => {
@@ -82,6 +92,33 @@ export default function ArticleTab() {
       }
     } catch (error) {
       console.error('Load articles error:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const loadArthubContent = async (category: string) => {
+    setIsLoading(true)
+    try {
+      const result = await fetchArthubContent(category, 10)
+      if (result && result.items) {
+        // Convert ArthHub items to Article format
+        const arthubArticles = result.items.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          summary: item.summary,
+          thumbnail: item.thumbnail || 'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=600',
+          url: item.url,
+          source: item.source || 'ArthHub',
+          sourceId: 'arthub',
+          category: item.categoryName || category,
+          date: item.date,
+          language: 'KR',
+        }))
+        setArticles(arthubArticles)
+      }
+    } catch (error) {
+      console.error('Load ArthHub content error:', error)
     } finally {
       setIsLoading(false)
     }
@@ -136,6 +173,7 @@ export default function ArticleTab() {
   }
 
   const currentSource = ART_NEWS_SOURCES.find(s => s.id === selectedSource)
+  const currentArthubCategory = ARTHUB_CATEGORIES.find(c => c.id === selectedArthubCategory)
 
   return (
     <div className="min-h-screen pb-24 flex">
@@ -197,6 +235,31 @@ export default function ArticleTab() {
                 </button>
               ))}
             </div>
+
+            {/* ArthHub Categories */}
+            <div className="mt-4 pt-4 border-t-2 border-white">
+              <p className="text-[10px] font-pixel text-gray-500 px-2 mb-2">ARTHUB AI</p>
+              {ARTHUB_CATEGORIES.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => {
+                    setSelectedArthubCategory(category.id)
+                    setSidebarOpen(false)
+                  }}
+                  className={`
+                    w-full text-left px-2 py-2 text-[10px] font-pixel
+                    border-2 mb-1 transition-all
+                    ${selectedArthubCategory === category.id 
+                      ? 'bg-white text-black border-white' 
+                      : 'bg-black text-white border-white hover:bg-white hover:text-black'
+                    }
+                  `}
+                  title={category.description}
+                >
+                  {category.name}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -220,12 +283,22 @@ export default function ArticleTab() {
           </div>
 
           {/* Current Source Info */}
-          {currentSource && (
+          {(currentSource || currentArthubCategory) && (
             <div className="mt-3 text-xs font-pixel border-2 border-white bg-black px-3 py-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-white">{currentSource.name}</span>
-                  <span className="text-gray-500 ml-2">({currentSource.language})</span>
+                  {currentSource && (
+                    <>
+                      <span className="text-white">{currentSource.name}</span>
+                      <span className="text-gray-500 ml-2">({currentSource.language})</span>
+                    </>
+                  )}
+                  {currentArthubCategory && (
+                    <>
+                      <span className="text-white">{currentArthubCategory.name}</span>
+                      <span className="text-gray-500 ml-2">(AI)</span>
+                    </>
+                  )}
                 </div>
                 <Globe size={14} className="text-white" />
               </div>
@@ -239,10 +312,10 @@ export default function ArticleTab() {
             <div className="flex justify-center py-12">
               <LoadingSpinner size="lg" />
             </div>
-          ) : !selectedSource ? (
+          ) : !selectedSource && !selectedArthubCategory ? (
             <EmptyState 
               icon={<Globe size={48} />} 
-              message="SELECT A SOURCE FROM THE RIGHT SIDEBAR"
+              message="SELECT A SOURCE FROM THE LEFT SIDEBAR"
             />
           ) : articles.length === 0 ? (
             <EmptyState 

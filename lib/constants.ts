@@ -78,6 +78,40 @@ export const ART_NEWS_SOURCES = [
   },
 ] as const
 
+// ==================== ArthHub Categories ====================
+export const ARTHUB_CATEGORIES = [
+  {
+    id: 'archive-ongoing',
+    name: '진행중인 전시',
+    description: '현재 관람 가능한 전시',
+  },
+  {
+    id: 'archive-upcoming',
+    name: '예정된 전시',
+    description: '곧 개최될 전시',
+  },
+  {
+    id: 'archive-ended',
+    name: '종료된 전시',
+    description: '최근 종료된 전시',
+  },
+  {
+    id: 'curation',
+    name: '큐레이션',
+    description: '큐레이션 및 기획 기사',
+  },
+  {
+    id: 'art-job',
+    name: '아트 잡',
+    description: '미술계 채용 및 공모',
+  },
+  {
+    id: 'review',
+    name: '리뷰',
+    description: '전시 및 작품 리뷰',
+  },
+] as const
+
 // ==================== Region Options ====================
 export const REGIONS = [
   'All',
