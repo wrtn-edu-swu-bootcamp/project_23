@@ -9,6 +9,38 @@ export async function POST(request: Request) {
   try {
     const { action, sourceId, query } = await request.json()
 
+    // n8n이 설정되어 있으면 n8n 사용
+    const n8nUrl = process.env.N8N_WEBHOOK_URL
+    if (n8nUrl) {
+      try {
+        console.log('Using n8n workflow...')
+        const response = await fetch(n8nUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action,
+            sourceId,
+            query,
+            timestamp: new Date().toISOString(),
+          }),
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          return NextResponse.json(data)
+        } else {
+          console.warn('n8n request failed, falling back to direct parsing')
+        }
+      } catch (error) {
+        console.warn('n8n error, falling back to direct parsing:', error)
+      }
+    }
+
+    // Fallback: 직접 RSS 파싱
+    console.log('Using direct RSS parsing...')
+
     if (action === 'fetch_feed') {
       // 특정 소스의 피드 가져오기
       const source = ART_NEWS_SOURCES.find(s => s.id === sourceId)
