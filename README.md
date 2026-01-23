@@ -223,36 +223,12 @@ All data structures are typed in `lib/types.ts`:
 - **API Setup**: See `docs/API-SETUP.md`
 - **OpenAI Setup**: See `docs/OPENAI-SETUP.md` ⭐
 - **n8n AI Setup**: See `docs/N8N-AI-SETUP.md` (optional)
-- **Vercel Deployment**: See `docs/VERCEL-DEPLOYMENT.md` 🚀
-- **Vercel Environment Variables**: See `docs/VERCEL-ENV-SETUP.md` 🔐
 - **Architecture**: See `docs/REFACTORING-PROPOSAL.md`
 - **Refactoring Summary**: See `docs/REFACTORING-SUMMARY.md`
 - **Font Setup**: See `public/fonts/README.md`
 - **Assets Guide**: See `public/assets/README.md`
 
-## 🚀 10. Vercel Deployment
-
-### Quick Deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/wrtn-edu-swu-bootcamp/project_23)
-
-### Manual Deployment
-
-1. **Push to GitHub** (already done ✅)
-2. **Import to Vercel**:
-   - Visit [vercel.com/new](https://vercel.com/new)
-   - Import `wrtn-edu-swu-bootcamp/project_23`
-3. **Configure Environment Variables**:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
-   OPENAI_API_KEY=your_openai_key
-   ```
-4. **Deploy** 🎉
-
-**Full Guide**: See [`docs/VERCEL-DEPLOYMENT.md`](docs/VERCEL-DEPLOYMENT.md)
-
-## 🎯 11. Deployment Readiness
+## 🎯 10. Deployment Readiness
 
 The codebase is structured for easy API integration:
 
@@ -263,7 +239,7 @@ The codebase is structured for easy API integration:
 - ✅ Type-safe API responses
 - ✅ Error handling in place
 
-## 📝 12. Code Quality
+## 📝 11. Code Quality
 
 - **TypeScript**: Strict type checking enabled
 - **ESLint**: Next.js recommended rules
@@ -271,7 +247,7 @@ The codebase is structured for easy API integration:
 - **Reusable Components**: Shared UI in `components/ui/`
 - **Custom Hooks**: Logic abstraction for reusability
 
-## 🤝 13. Contributing
+## 🤝 12. Contributing
 
 When adding new features:
 1. Add types to `lib/types.ts`
@@ -280,6 +256,6 @@ When adding new features:
 4. Use shared UI components from `components/ui/CommonUI.tsx`
 5. Follow existing naming conventions
 
-## 📄 14. License
+## 📄 13. License
 
 This project is private and proprietary.

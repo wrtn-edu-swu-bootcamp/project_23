@@ -40,8 +40,7 @@ export default function LoadingScreen({ show }: LoadingScreenProps) {
               alt="Loading..."
               className="w-full h-full object-contain"
               style={{ 
-                imageRendering: 'crisp-edges',
-                WebkitImageSmoothing: 'high'
+                imageRendering: 'crisp-edges' as any
               }}
             />
           </div>

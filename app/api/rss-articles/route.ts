@@ -76,8 +76,8 @@ export async function POST(request: Request) {
 
     if (action === 'search') {
       // 검색 기능 (간단 버전 - 키워드 매칭)
-      const sources = sourceId 
-        ? [ART_NEWS_SOURCES.find(s => s.id === sourceId)].filter(Boolean)
+      const sources = sourceId
+        ? ART_NEWS_SOURCES.filter(s => s.id === sourceId)
         : ART_NEWS_SOURCES
 
       const allArticles: any[] = []
