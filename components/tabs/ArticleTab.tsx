@@ -150,10 +150,9 @@ export default function ArticleTab() {
           <div className="px-2 py-3">
             <h3 className="text-xs font-pixel text-white mb-3 px-2 uppercase">Sources</h3>
             
-            {/* International Sources */}
-            <div className="mb-4">
-              <p className="text-[10px] font-pixel text-gray-500 px-2 mb-2">INTERNATIONAL</p>
-              {ART_NEWS_SOURCES.filter(s => s.category === 'International').map((source) => (
+            {/* All Sources */}
+            <div>
+              {ART_NEWS_SOURCES.map((source) => (
                 <button
                   key={source.id}
                   onClick={() => {
@@ -163,30 +162,6 @@ export default function ArticleTab() {
                   className={`
                     w-full text-left px-2 py-2 text-[10px] font-pixel
                     border-2 mb-1 transition-all uppercase
-                    ${selectedSource === source.id 
-                      ? 'bg-white text-black border-white' 
-                      : 'bg-black text-white border-white hover:bg-white hover:text-black'
-                    }
-                  `}
-                >
-                  {source.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Korea Sources */}
-            <div>
-              <p className="text-[10px] font-pixel text-gray-500 px-2 mb-2">KOREA</p>
-              {ART_NEWS_SOURCES.filter(s => s.category === 'Korea').map((source) => (
-                <button
-                  key={source.id}
-                  onClick={() => {
-                    setSelectedSource(source.id)
-                    setSidebarOpen(false)
-                  }}
-                  className={`
-                    w-full text-left px-2 py-2 text-[10px] font-pixel
-                    border-2 mb-1 transition-all
                     ${selectedSource === source.id 
                       ? 'bg-white text-black border-white' 
                       : 'bg-black text-white border-white hover:bg-white hover:text-black'
