@@ -48,13 +48,27 @@ export default function LoadingScreen({
           </div>
         </div>
       ) : (
-        // Default Bitmap Animation
+        // Bitmap Logo Animation
         <div className="text-center space-y-6">
-          {/* Bitmap Logo Animation */}
-          <div className="relative w-24 h-24 mx-auto">
-            <div className="absolute inset-0 border-4 border-white animate-ping" />
-            <div className="relative w-full h-full border-4 border-white bg-black flex items-center justify-center">
-              <span className="text-3xl font-bitmap">N</span>
+          {/* Triangle Logo Animation */}
+          <div className="relative w-32 h-32 mx-auto">
+            <div className="absolute inset-0 border-4 border-white animate-ping opacity-50" 
+                 style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }} 
+            />
+            <div className="relative w-full h-full border-4 border-white bg-black flex items-center justify-center"
+                 style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
+            >
+              {/* Logo Image */}
+              <div className="absolute inset-2">
+                <Image
+                  src="/assets/logo.png"
+                  alt="NAVA Logo"
+                  fill
+                  className="object-contain animate-pulse"
+                  priority
+                  unoptimized
+                />
+              </div>
             </div>
           </div>
           
