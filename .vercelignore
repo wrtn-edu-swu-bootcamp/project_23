@@ -1,0 +1,36 @@
+# Vercel 배포 시 제외할 파일
+
+# 환경 변수
+.env*.local
+
+# 개발 파일
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 테스트 파일
+test/
+tests/
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# 문서 (필요시 주석 해제)
+# docs/
+
+# n8n 워크플로우 JSON (로컬 테스트용)
+# docs/n8n-*.json
+
+# 로그
+*.log
+
+# 임시 파일
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
