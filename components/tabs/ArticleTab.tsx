@@ -139,6 +139,68 @@ export default function ArticleTab() {
 
   return (
     <div className="min-h-screen pb-24 flex">
+      {/* Left Sidebar - Sources */}
+      <div className={`
+        fixed left-0 top-0 h-full w-48 bg-black border-r-4 border-white 
+        transform transition-transform duration-300 z-40
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:relative md:translate-x-0 md:w-40
+      `}>
+        <div className="h-full overflow-y-auto pt-20 pb-24">
+          <div className="px-2 py-3">
+            <h3 className="text-xs font-pixel text-white mb-3 px-2 uppercase">Sources</h3>
+            
+            {/* International Sources */}
+            <div className="mb-4">
+              <p className="text-[10px] font-pixel text-gray-500 px-2 mb-2">INTERNATIONAL</p>
+              {ART_NEWS_SOURCES.filter(s => s.category === 'International').map((source) => (
+                <button
+                  key={source.id}
+                  onClick={() => {
+                    setSelectedSource(source.id)
+                    setSidebarOpen(false)
+                  }}
+                  className={`
+                    w-full text-left px-2 py-2 text-[10px] font-pixel
+                    border-2 mb-1 transition-all uppercase
+                    ${selectedSource === source.id 
+                      ? 'bg-white text-black border-white' 
+                      : 'bg-black text-white border-white hover:bg-white hover:text-black'
+                    }
+                  `}
+                >
+                  {source.name}
+                </button>
+              ))}
+            </div>
+
+            {/* Korea Sources */}
+            <div>
+              <p className="text-[10px] font-pixel text-gray-500 px-2 mb-2">KOREA</p>
+              {ART_NEWS_SOURCES.filter(s => s.category === 'Korea').map((source) => (
+                <button
+                  key={source.id}
+                  onClick={() => {
+                    setSelectedSource(source.id)
+                    setSidebarOpen(false)
+                  }}
+                  className={`
+                    w-full text-left px-2 py-2 text-[10px] font-pixel
+                    border-2 mb-1 transition-all
+                    ${selectedSource === source.id 
+                      ? 'bg-white text-black border-white' 
+                      : 'bg-black text-white border-white hover:bg-white hover:text-black'
+                    }
+                  `}
+                >
+                  {source.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Main Content */}
       <div className="flex-1 min-w-0">
         <Header title="ARTICLE">
@@ -257,74 +319,12 @@ export default function ArticleTab() {
         </div>
       </div>
 
-      {/* Right Sidebar - Sources */}
-      <div className={`
-        fixed right-0 top-0 h-full w-48 bg-black border-l-4 border-white 
-        transform transition-transform duration-300 z-40
-        ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}
-        md:relative md:translate-x-0 md:w-40
-      `}>
-        <div className="h-full overflow-y-auto pt-20 pb-24">
-          <div className="px-2 py-3">
-            <h3 className="text-xs font-pixel text-white mb-3 px-2 uppercase">Sources</h3>
-            
-            {/* International Sources */}
-            <div className="mb-4">
-              <p className="text-[10px] font-pixel text-gray-500 px-2 mb-2">INTERNATIONAL</p>
-              {ART_NEWS_SOURCES.filter(s => s.category === 'International').map((source) => (
-                <button
-                  key={source.id}
-                  onClick={() => {
-                    setSelectedSource(source.id)
-                    setSidebarOpen(false)
-                  }}
-                  className={`
-                    w-full text-left px-2 py-2 text-[10px] font-pixel
-                    border-2 mb-1 transition-all uppercase
-                    ${selectedSource === source.id 
-                      ? 'bg-white text-black border-white' 
-                      : 'bg-black text-white border-white hover:bg-white hover:text-black'
-                    }
-                  `}
-                >
-                  {source.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Korea Sources */}
-            <div>
-              <p className="text-[10px] font-pixel text-gray-500 px-2 mb-2">KOREA</p>
-              {ART_NEWS_SOURCES.filter(s => s.category === 'Korea').map((source) => (
-                <button
-                  key={source.id}
-                  onClick={() => {
-                    setSelectedSource(source.id)
-                    setSidebarOpen(false)
-                  }}
-                  className={`
-                    w-full text-left px-2 py-2 text-[10px] font-pixel
-                    border-2 mb-1 transition-all
-                    ${selectedSource === source.id 
-                      ? 'bg-white text-black border-white' 
-                      : 'bg-black text-white border-white hover:bg-white hover:text-black'
-                    }
-                  `}
-                >
-                  {source.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Mobile Sidebar Toggle */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="md:hidden fixed right-4 bottom-24 bg-white text-black border-4 border-black p-3 shadow-bitmap z-50"
+        className="md:hidden fixed left-4 bottom-24 bg-white text-black border-4 border-black p-3 shadow-bitmap z-50"
       >
-        <ChevronRight size={20} className={`transform transition-transform ${sidebarOpen ? 'rotate-180' : ''}`} />
+        <ChevronRight size={20} className={`transform transition-transform ${sidebarOpen ? '' : 'rotate-180'}`} />
       </button>
     </div>
   )
