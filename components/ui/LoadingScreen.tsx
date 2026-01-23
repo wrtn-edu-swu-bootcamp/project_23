@@ -27,24 +27,34 @@ export default function LoadingScreen({ show }: LoadingScreenProps) {
       }`}
     >
       {/* Logo Image Animation */}
-      <div className="text-center space-y-6">
-        <div className="relative w-48 h-48 mx-auto">
-          <img
-            src="/assets/logo.png"
-            alt="Loading..."
-            className="w-full h-full object-contain brightness-0 invert"
-            style={{ filter: 'brightness(0) invert(1)' }}
-          />
+      <div className="text-center space-y-8">
+        {/* Logo with glow effect */}
+        <div className="relative w-64 h-64 mx-auto">
+          {/* Glow background */}
+          <div className="absolute inset-0 bg-white/10 blur-3xl rounded-full animate-pulse" />
+          
+          {/* Logo image */}
+          <div className="relative w-full h-full p-8 bg-white/5 border-2 border-white/20 backdrop-blur-sm">
+            <img
+              src="/assets/logo.png"
+              alt="Loading..."
+              className="w-full h-full object-contain"
+              style={{ 
+                imageRendering: 'crisp-edges',
+                WebkitImageSmoothing: 'high'
+              }}
+            />
+          </div>
         </div>
         
         {/* Loading Dots */}
-        <div className="flex gap-2 justify-center">
-          <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '0ms' }} />
-          <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '200ms' }} />
-          <div className="w-3 h-3 border-2 border-white bg-white animate-pulse" style={{ animationDelay: '400ms' }} />
+        <div className="flex gap-3 justify-center">
+          <div className="w-4 h-4 border-2 border-white bg-white animate-pulse shadow-bitmap" style={{ animationDelay: '0ms' }} />
+          <div className="w-4 h-4 border-2 border-white bg-white animate-pulse shadow-bitmap" style={{ animationDelay: '200ms' }} />
+          <div className="w-4 h-4 border-2 border-white bg-white animate-pulse shadow-bitmap" style={{ animationDelay: '400ms' }} />
         </div>
         
-        <p className="text-gray-400 text-xs font-pixel uppercase tracking-wider">Loading...</p>
+        <p className="text-white text-sm font-pixel uppercase tracking-widest animate-pulse">Loading...</p>
       </div>
     </div>
   )
