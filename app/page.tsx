@@ -7,19 +7,19 @@ import dynamic from 'next/dynamic'
 
 // Lazy load tab components
 const FolioTab = dynamic(() => import('@/components/tabs/FolioTab'), {
-  loading: () => <LoadingScreen show={true} />,
+  loading: () => <LoadingScreen show={true} useGif={false} />,
 })
 
 const NoteTab = dynamic(() => import('@/components/tabs/NoteTab'), {
-  loading: () => <LoadingScreen show={true} />,
+  loading: () => <LoadingScreen show={true} useGif={false} />,
 })
 
 const PlannerTab = dynamic(() => import('@/components/tabs/PlannerTab'), {
-  loading: () => <LoadingScreen show={true} />,
+  loading: () => <LoadingScreen show={true} useGif={false} />,
 })
 
 const ArticleTab = dynamic(() => import('@/components/tabs/ArticleTab'), {
-  loading: () => <LoadingScreen show={true} />,
+  loading: () => <LoadingScreen show={true} useGif={false} />,
 })
 
 export default function Home() {
@@ -53,7 +53,7 @@ export default function Home() {
 
   return (
     <>
-      <LoadingScreen show={isLoading} />
+      <LoadingScreen show={isLoading} useGif={false} />
       
       <div className="min-h-screen bg-black">
         {renderTab()}
