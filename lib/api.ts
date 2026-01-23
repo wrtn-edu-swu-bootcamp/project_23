@@ -188,3 +188,54 @@ export async function callN8nAI(action: string, data: any) {
     return null
   }
 }
+
+// 7. RSS 피드 기사 가져오기 (n8n 기반)
+export async function fetchRSSArticles(sourceId: string) {
+  try {
+    const response = await fetch('/api/rss-articles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'fetch_feed',
+        sourceId,
+      }),
+    })
+    
+    if (!response.ok) {
+      throw new Error('RSS fetch failed')
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error('RSS Fetch Error:', error)
+    return { articles: [] }
+  }
+}
+
+// 8. RSS 피드 검색 (n8n + AI)
+export async function searchRSSArticles(query: string, sourceId?: string) {
+  try {
+    const response = await fetch('/api/rss-articles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'search',
+        query,
+        sourceId, // optional: 특정 소스만 검색
+      }),
+    })
+    
+    if (!response.ok) {
+      throw new Error('RSS search failed')
+    }
+    
+    return await response.json()
+  } catch (error) {
+    console.error('RSS Search Error:', error)
+    return { articles: [] }
+  }
+}

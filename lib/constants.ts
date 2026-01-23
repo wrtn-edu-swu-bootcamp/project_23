@@ -34,6 +34,50 @@ export const RSS_FEEDS = {
   artReview: 'https://artreview.com/feed/',
 } as const
 
+// ==================== Art News Sources (Curated) ====================
+export const ART_NEWS_SOURCES = [
+  {
+    id: 'artnet',
+    name: 'Artnet News',
+    language: 'EN',
+    url: 'https://news.artnet.com/feed',
+    category: 'International',
+    description: 'Global art market news and analysis',
+  },
+  {
+    id: 'artnewspaper',
+    name: 'The Art Newspaper',
+    language: 'EN',
+    url: 'https://www.theartnewspaper.com/rss',
+    category: 'International',
+    description: 'Art world news, reviews, and analysis',
+  },
+  {
+    id: 'arthub',
+    name: '아트허브',
+    language: 'KR',
+    url: 'https://www.arthub.co.kr/rss/allArticle.xml',
+    category: 'Korea',
+    description: '한국 미술 뉴스 및 전시 정보',
+  },
+  {
+    id: 'neolook',
+    name: '네오룩',
+    language: 'KR',
+    url: 'https://www.neolook.com/rss',
+    category: 'Korea',
+    description: '현대미술 비평 및 리뷰',
+  },
+  {
+    id: 'monthlyart',
+    name: '월간미술',
+    language: 'KR',
+    url: 'https://www.monthlyart.com/rss',
+    category: 'Korea',
+    description: '미술 전문지 - 전시, 작가, 비평',
+  },
+] as const
+
 // ==================== Region Options ====================
 export const REGIONS = [
   'All',
