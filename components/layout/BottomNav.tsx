@@ -1,13 +1,12 @@
 'use client'
 
-import { Image, FileText, Calendar, Newspaper } from 'lucide-react'
+import { Image, FileText, Newspaper } from 'lucide-react'
 
-export type TabName = 'folio' | 'note' | 'planner' | 'article'
+export type TabName = 'folio' | 'note' | 'article'
 
 const tabs = [
   { name: 'FOLIO', id: 'folio' as TabName, icon: Image },
   { name: 'NOTE', id: 'note' as TabName, icon: FileText },
-  { name: 'PLANNER', id: 'planner' as TabName, icon: Calendar },
   { name: 'ARTICLE', id: 'article' as TabName, icon: Newspaper },
 ]
 
@@ -20,7 +19,7 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-black border-t-2 border-white z-50">
       <div className="w-full max-w-[390px] mx-auto">
-        <div className="grid grid-cols-4 h-16">
+        <div className="grid grid-cols-3 h-16">
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id

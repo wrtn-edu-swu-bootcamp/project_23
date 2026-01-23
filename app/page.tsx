@@ -14,10 +14,6 @@ const NoteTab = dynamic(() => import('@/components/tabs/NoteTab'), {
   loading: () => <LoadingScreen show={true} useGif={false} />,
 })
 
-const PlannerTab = dynamic(() => import('@/components/tabs/PlannerTab'), {
-  loading: () => <LoadingScreen show={true} useGif={false} />,
-})
-
 const ArticleTab = dynamic(() => import('@/components/tabs/ArticleTab'), {
   loading: () => <LoadingScreen show={true} useGif={false} />,
 })
@@ -42,8 +38,6 @@ export default function Home() {
         return <FolioTab />
       case 'note':
         return <NoteTab />
-      case 'planner':
-        return <PlannerTab />
       case 'article':
         return <ArticleTab />
       default:
